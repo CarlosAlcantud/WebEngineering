@@ -5,6 +5,9 @@ import { Types } from 'mongoose';
 
 
 /////    /////////////////   FOR THE USER ////  //////   //////      ///////     
+/////  //////       //////   GET USER BY ID  ////// /////   ////   ////   //// 
+/////  //////       REST APPI endpoint for the GET of user by his ID   ////// /////   ////
+
 export interface UserResponse {
     email: string;
     name: string;
@@ -33,7 +36,9 @@ export interface UserResponse {
   }
 
 
-//
+/////  //////       ////// POST  USER ////// /////   ////   ////   //// 
+/////  //////       REST APPI endpoint for the POST of the users   ////// /////   ////
+
 
 export interface CreateUserResponse {
     _id: Types.ObjectId | string;
@@ -71,8 +76,8 @@ export interface CreateUserResponse {
 
 
 
-/////  //////       //////  FOR THE PRODUCTS ////// /////   ////
-
+/////  //////       //////   PRODUCTS ////// /////   ////   ////   //// 
+/////  //////       REST APPI endpoint for the GET products  ////// /////   ////
 
 
 export interface ProductsResponse {

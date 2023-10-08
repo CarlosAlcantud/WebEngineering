@@ -8,16 +8,16 @@ const MONGODB_URI = process.env.MONGODB_URI;
 
 const products: Product[] = [
   {
-    name: 'Earthen Bottle',
-    price: 39.95,
-    img: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-01.jpg',
-    description: 'What a bottle!',
+    name: 'Shelby Mustang 2020 ',
+    price: 120000,
+    img: '',
+    description: '',
   },
   {
-    name: 'Nomad Tumbler',
-    price: 39.95,
-    img: 'https://tailwindui.com/img/ecommerce-images/category-page-04-image-card-02.jpg',
-    description: 'Yet another item',
+    name: 'Porche 911',
+    price: 300000,
+    img: '',
+    description: '',
   },
 ];
 
@@ -33,11 +33,30 @@ async function seed() {
   };
   const conn = await mongoose.connect(MONGODB_URI, opts);
 
+  //Practica 1 
+  //  // ////  // // //  // //We create the empty collections if they don´t exist  //  // ////  // ////  // ////  // //
+//  // ////  // ////  // //   for the users and the products.                     //  // ////  // ////  // ////  // //
+
+
+  await Users.createCollection();
+  await Products.createCollection();
+
+
+
+  //Fin Practica 
+
+  //We clear the data base. 
+
   await conn.connection.db.dropDatabase();
 
+  //This inserts into the data base the products
   const insertedProducts = await Products.insertMany(products);
+
+
+  //Now we start the Users creation. 
+
   const user: User = {
-    email: 'johndoe@example.com',
+    email: 'johnDoe@example.com',
     password: '1234',
     name: 'John',
     surname: 'Doe',
@@ -46,16 +65,20 @@ async function seed() {
     cartItems: [
       {
         product: insertedProducts[0]._id,
-        qty: 2,
+        qty: 1,
       },
       {
         product: insertedProducts[1]._id,
-        qty: 5,
+        qty: 1,
       },
     ],
     orders: [],
   };
-  await Users.create(user); //This line allows to the user to be created. 
+
+   //This line inserts the user.  
+
+  await Users.create(user);
+
 //   const res = await Users.create(user); If I want to show the user just created I need to put the const res, that way I can call res on the console.log 
 //console.log(JSON.stringify(res, null, 2)); //THIS LINE WHAT DOES IS TO SHOW THE USER THATS BEEN CREATED. 
 
@@ -89,7 +112,7 @@ const userProjection = { //THIS WAY WE GET FROM THE USER ONLY THE NAME AND THE S
   };
 
   const retrievedUser = await Users
-    .findOne({ email: 'johndoe@example.com' }, userProjection)
+    .findOne({ email: 'johnDoe@example.com' }, userProjection)
     .populate('cartItems.product', productProjection);
   console.log(JSON.stringify(retrievedUser, null, 2));
 
