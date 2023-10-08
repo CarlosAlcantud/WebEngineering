@@ -4,7 +4,10 @@ import Users, { User } from '@/models/User';
 import { Types } from 'mongoose';
 
 
-/////    /////////////////   FOR THE USER ////  //////   //////      ///////     
+
+/////    /////////////////   FOR THE USER ////  //////   //////      ///////   
+
+
 /////  //////       //////   GET USER BY ID  ////// /////   ////   ////   //// 
 /////  //////       REST APPI endpoint for the GET of user by his ID   ////// /////   ////
 
@@ -75,8 +78,80 @@ export interface CreateUserResponse {
   }
 
 
+  /////  //////       //////   CART ITEMS  ////// /////   ////   ////   //// 
+/////  //////   REST APPI endpoint for the GET of cart items by the ID of an User  ////// /////   ////   ////   ////  
+
+export interface CartItemsResponse {
+  cartItems: {
+    product: {
+      _id: Types.ObjectId | string;
+      name: string;
+      price: number;
+    };
+    qty: number;
+  }[];
+}
+
+export async function getCartItems(userId: string): Promise<CartItemsResponse | null> {
+  await connect();
+  
+  const userProjection = {
+    _id:false, 
+    cartItems: {
+      product: true,
+      qty: true,
+    }
+  }
+  const productProjection = { 
+    name: true, 
+    price: true, 
+  }; 
+
+  const cartItems = await Users
+  .findOne({ _id: userId }, userProjection)
+  .populate('cartItems.product', productProjection)
+
+  return cartItems;
+}
+
+
 
 /////  //////       //////   PRODUCTS ////// /////   ////   ////   //// 
+
+
+/////  //////       //////   GET PRODUCT BY ID  ////// /////   ////   ////   //// 
+/////  //////       REST APPI endpoint for the GET of product by his ID   ////// /////   ////
+
+
+export interface productResponse {
+  name: string;
+  price: number;
+  img : string;
+  description : string;
+}
+
+export async function getProduct(productId: string):  Promise<productResponse | null> {
+  await connect();
+
+  const productProjection = {
+    name: true,
+    price: true,  
+    img : true,
+    description : true,
+  };
+
+  const product = await Products.findById(productId, productProjection);
+
+  if (product === null) {
+    return null;
+  }
+
+  return product;
+}
+
+
+
+
 /////  //////       REST APPI endpoint for the GET products  ////// /////   ////
 
 
@@ -98,4 +173,6 @@ export async function getProducts():  Promise<ProductsResponse> {
   return {
     products: products,
   };
+
+
 }
