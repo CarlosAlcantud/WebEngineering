@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { createUser, CreateUserResponse } from '@/lib/handlers';
+import { UsersResponse, getUsers } from '@/lib/handlers';
 
 export async function POST(
   request: NextRequest
@@ -20,3 +21,15 @@ export async function POST(
   headers.append('Location', `/api/users/${userId._id}`);
   return NextResponse.json({ _id: userId._id }, { status: 201, headers: headers });
 }
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////    Create a GET FOR USERS /////    ////  ///// /////   ///// 
+////  //////  ///// //////     /////    ////  ///// /////   /////  ////  //////  ///// //////   
+
+export async function GET(
+  request: NextRequest
+): Promise<NextResponse<UsersResponse>>  {
+  const users = await getUsers();
+
+  return NextResponse.json(users);
+}
+
