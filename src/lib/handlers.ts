@@ -132,73 +132,58 @@ export async function getCartItems(userId: string): Promise<CartItemsResponse | 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
-// export interface UpdateCartItemResponse {
-//   cartItems: Types.ObjectId[],
-//   itemCreated: boolean;
-// }
+export interface UpdateCartResponse {
+  cartItems: Types.ObjectId[];
+  CreatedorUpdated : boolean;
+}
 
-// export async function updateCartItem(
-//   userId: string,
-//   productId: string,
-//   qty: number
-// ): Promise<UpdateCartItemResponse | null> {
-//   await connect()
-//   let itemCreated = false; 
-//   // check if the product exists
-//   const productCount = await Products.countDocuments({_id : productId})    //it returns the number of documnets
-//   if (productCount === 0) {
-//      return null
-//   }
+export async function UpdateCartItem(
+  userId: string,
+  productId: string,
+  qty: number
+): Promise<UpdateCartResponse | null> {
+  await connect();
 
-//   // check if the user exists
-//   const user = await Users.findById(userId)
-//   if (user === null) {
-//     return null
-//   }
-
-//   //find if there's a cartItem in carProduct
-//   const cartItem = user.cartItems.find((cartItem : any) => cartItem.product._id.equals(productId))    //find() takes as argument an other function that is used for every single array
-//   if (cartItem) {
-//     cartItem.qty = qty;
-//     itemCreated = false;
-//   } else {  // if the product does not exist in the cart
-//     itemCreated = true;
-//     const newCartItem = {
-//       product: new Types.ObjectId(productId),
-//       qty: qty,
-      
-//     }
-//     user.cartItems.push(newCartItem)
-//   }
-
-//   // commit the changes in the database (user)
-//   await user.save()       // await -> if it's asynchronous
-
-//   // retreive the user from the updated database
-//   const userProjection = {
-//     _id: false,
-//     cartItems: {
-//       product: true,
-//       qty: true,
-//     }
-//   }
-//   const productProjection = { 
-//     name: true, 
-//     price: true, 
-//   }
-
-//   const updateUser = Users
-//     .findById(userId, userProjection)
-//     .populate('cartItems.product', productProjection ) 
   
-//   return ({
+  const CreatedorUpdated = false;
+  const user = await Users.findById(userId);
+  
+  //To manage the user if doesn't exist.
+  if (user === null) {
+    return null;
+  }
 
-//     cartItems: updateUser.cartItems,
-//     itemCreated: itemCreated
 
-//   });
-// }
+  const cartItem = user.cartItems.find((cartItem: any) =>
+    cartItem.product._id.equals(productId)
+  );
 
+
+  if (cartItem) {
+    cartItem.qty = qty;
+  } else {
+    const newCartItem = {
+      product: new Types.ObjectId(productId),
+      qty: qty,
+    };
+    user.cartItems.push(newCartItem);
+  }
+  await user.save();
+
+
+  const userProjection = {
+    _id: false,
+    cartItem: {
+      product: true,
+      qty: true,
+    },
+  };
+
+  const updateUser = Users.findById(userId);
+
+  
+  return (updateUser);
+}
 
 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
