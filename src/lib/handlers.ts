@@ -1,7 +1,7 @@
 import Products, { Product } from '@/models/Product';
 import connect from '@/lib/mongoose';
 import Users, { User } from '@/models/User';
-import { Types } from 'mongoose';
+import mongoose, { Types } from 'mongoose';
 import Orders, {Order} from '@/models/Order';
 //import User from '@/models/User';
 
@@ -377,3 +377,94 @@ export async function getOrders(userId: string): Promise<OrdersResponse | null> 
 }
 
 
+
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       REST APPI endpoint for the POST ORDERS ////// /////   ////
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+
+export interface CreateOrderResponse {
+  _id: Types.ObjectId | string;
+}
+
+export async function createOrder(
+  userId: string, 
+  order: {
+    address: string;
+    cardHolder: string;
+    cardNumber: string;
+  }
+): Promise<CreateOrderResponse | null> {
+  
+  const user = await Users.findById(userId);
+  
+  if (user === null) {
+    return null;
+  }
+
+  //We create the order with the params and add the date.  
+  const doc : Order = {
+    ...order,
+    date: new Date(),
+    
+  };
+
+  const newOrder = new Orders(doc);
+  
+  await newOrder.save();
+
+  // Here we put the order just created to the user. 
+  user.orders.push(newOrder);
+  
+  //Now we save the user 
+  await user.save();
+
+  
+  return {
+    _id: newOrder._id,
+  };
+}
+
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       REST APPI endpoint for the GET ORDERS BY THE ID ////// /////   ////
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+
+export interface OrderItemResponse {
+  _id?: Types.ObjectId;
+  address?: string;
+  date: Date;
+  cardHolder?: string;
+  cardNumber?: string;
+  orderItems: {
+    product: {
+      _id: Types.ObjectId | string;
+      name: string;
+    };
+    qty: number;
+    price: number;
+  }
+}
+
+export async function FindOrderItem(
+  userId: string,
+  orderId: string
+): Promise<OrderItemResponse | null> {
+  await connect();
+
+
+  const user = await Users.findById(userId);
+  //To manage the user if doesn't exist.
+  if (user === null) {
+    return null;
+  }
+
+
+
+
+
+
+  return user;
+}

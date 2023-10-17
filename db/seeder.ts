@@ -22,17 +22,10 @@ const products: Product[] = [
   },
 ];
 
-// const orders: Order[] = [
-//   {
-//     address: 'Albacetee',
-//     date: 10,
-//     cardHolder: '83294709238',
-//     cardNumber: '2374982374',
-//   }
+  
 
 
 
-// ];
 
 async function seed() {
   if (!MONGODB_URI) {
@@ -64,7 +57,7 @@ async function seed() {
 
   //This inserts into the data base the products
   const insertedProducts = await Products.insertMany(products);
-  //const insertedOrders = await Orders.insertMany(orders);
+  
 
   //Now we start the Users creation. 
 
@@ -86,13 +79,7 @@ async function seed() {
         qty: 1,
       },
     ],
-    // orders: [
-      
-    //      insertedOrders[0]._id,
-      
-      
-      
-    // ],
+    
   };
 
    //This line inserts the user.  
