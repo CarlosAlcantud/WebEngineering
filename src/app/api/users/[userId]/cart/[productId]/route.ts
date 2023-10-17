@@ -40,25 +40,27 @@ export async function PUT(
     return NextResponse.json({error: 'The qty is missing'}, { status: 400 });
   }
 
+  //I call the method to update the cart
   const cartItems = await UpdateCartItem(
     params.userId,
     params.productId,
     body.qty
   );
 
+  //Now I get the cart updated to show it. 
 
-  const userProjection = {
-    _id: false,
-    cartItem: {
-      product: true,
-      qty: true,
-    },
-  };
-  //¿How can I manage if the response of the cart is modify or its created?
+  const updatedCart = await getCartItems(params.userId);
 
+  //I check if the product its created 
+  if(cartItems?.createdOrUpdated){
+    return NextResponse.json(updatedCart,{status: 201});
 
-  //TODO: return 200 or 201 dependiendo on whether a new cart has been created
-  return NextResponse.json(cartItems);
+  }; 
+
+ 
+  //If the product already exists
+
+  return NextResponse.json(updatedCart);
 }
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //

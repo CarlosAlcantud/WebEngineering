@@ -134,7 +134,7 @@ export async function getCartItems(userId: string): Promise<CartItemsResponse | 
 
 export interface UpdateCartResponse {
   cartItems: Types.ObjectId[];
-  CreatedorUpdated : boolean;
+  createdOrUpdated : boolean;
 }
 
 export async function UpdateCartItem(
@@ -145,7 +145,7 @@ export async function UpdateCartItem(
   await connect();
 
   
-  const CreatedorUpdated = false;
+  var createdOrUpdated = false;
   const user = await Users.findById(userId);
   
   //To manage the user if doesn't exist.
@@ -162,6 +162,7 @@ export async function UpdateCartItem(
   if (cartItem) {
     cartItem.qty = qty;
   } else {
+    createdOrUpdated = true;
     const newCartItem = {
       product: new Types.ObjectId(productId),
       qty: qty,
@@ -171,18 +172,20 @@ export async function UpdateCartItem(
   await user.save();
 
 
-  const userProjection = {
-    _id: false,
-    cartItem: {
-      product: true,
-      qty: true,
-    },
+  
+
+  //With this I return to the method PUT in route.ts also the variable CreatedorUpdated.
+  const updateResponse: UpdateCartResponse = {
+    cartItems: user.cartItems.map((item: any) => item.product),
+    createdOrUpdated, // Include the CreatedorUpdated variable in the response.
   };
 
-  const updateUser = Users.findById(userId);
 
   
-  return (updateUser);
+  return updateResponse;
+
+
+  //return (updateUser);
 }
 
 
