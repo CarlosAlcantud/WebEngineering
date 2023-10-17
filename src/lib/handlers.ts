@@ -2,6 +2,7 @@ import Products, { Product } from '@/models/Product';
 import connect from '@/lib/mongoose';
 import Users, { User } from '@/models/User';
 import { Types } from 'mongoose';
+import Orders, {Order} from '@/models/Order';
 //import User from '@/models/User';
 
 
@@ -331,3 +332,48 @@ export async function getUsers():  Promise<UsersResponse> {
 
 
 }
+
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       //////   ORDERS  ////// /////   ////   ////   //// 
+
+
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       REST APPI endpoint for the GET ORDERS ////// /////   ////
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+
+
+export interface OrdersResponse {
+  orders: {
+    _id?: Types.ObjectId;
+    address?: string;
+    date: Date;
+    cardHolder?: string;
+    cardNumber: string;
+  }[];
+}
+
+export async function getOrders(userId: string): Promise<OrdersResponse | null> {
+  await connect();
+  
+  
+  const userProjection = {
+    _id:false, 
+    orders: {
+      address : true,
+      date: true,
+      cardHolder : true, 
+      cardNumber : true
+    }
+  }
+ 
+  const orders = await Users
+  .findOne({ _id: userId },userProjection)
+
+  return orders;
+}
+
+
