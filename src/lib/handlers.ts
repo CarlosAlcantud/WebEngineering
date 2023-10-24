@@ -3,6 +3,8 @@ import connect from '@/lib/mongoose';
 import Users, { User } from '@/models/User';
 import mongoose, { Types } from 'mongoose';
 import Orders, {Order} from '@/models/Order';
+import bcrypt from 'bcrypt';
+
 //import User from '@/models/User';
 
 
@@ -69,9 +71,11 @@ export interface CreateUserResponse {
     if (prevUser.length !== 0) {
       return null;
     }
-  
+    const hash = await bcrypt.hash(user.password, 10);
+
     const doc: User = {
       ...user,
+      password: hash,
       birthdate: new Date(user.birthdate),
       cartItems: [],
       orders: [],
@@ -347,33 +351,45 @@ export async function getUsers():  Promise<UsersResponse> {
 
 
 export interface OrdersResponse {
-  orders: {
-    _id?: Types.ObjectId;
-    address?: string;
+    address: string;
     date: Date;
     cardHolder?: string;
     cardNumber: string;
-  }[];
+    
 }
 
-export async function getOrders(userId: string): Promise<OrdersResponse | null> {
+export async function getOrders(userId: string): Promise<OrdersResponse[] | null> {
   await connect();
   
   
   const userProjection = {
     _id:false, 
-    orders: {
-      address : true,
-      date: true,
-      cardHolder : true, 
-      cardNumber : true
-    }
-  }
- 
-  const orders = await Users
-  .findOne({ _id: userId },userProjection)
+    email: false,
+    password:false,
+    name: false,
+    surname: false,
+    address: false,
+    birthdate:false,
+    cartItems:false,
+    __v : false
+  };
 
-  return orders;
+  const orderProjection = {
+    address : true,
+    date: true,
+    cardHolder : true, 
+    cardNumber : true,
+    
+  };
+
+
+
+  const orders = await Users.findById(userId,userProjection).populate(
+    'orders',orderProjection
+  );
+
+
+  return orders
 }
 
 
@@ -396,6 +412,7 @@ export async function createOrder(
     cardNumber: string;
   }
 ): Promise<CreateOrderResponse | null> {
+  await connect();
   
   const user = await Users.findById(userId);
   
@@ -411,7 +428,13 @@ export async function createOrder(
   };
 
   const newOrder = new Orders(doc);
-  
+
+  newOrder.orderItems = user.cartItems.map((item: any) => ({
+    product: item.product._id,
+    qty: item.qty,
+    price: item.product.price
+  }));
+
   await newOrder.save();
 
   // Here we put the order just created to the user. 
@@ -432,12 +455,12 @@ export async function createOrder(
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
-export interface OrderItemResponse {
-  _id?: Types.ObjectId;
-  address?: string;
+export interface OrderResponse {
+  _id: Types.ObjectId;
+  address: string;
   date: Date;
-  cardHolder?: string;
-  cardNumber?: string;
+  cardHolder: string;
+  cardNumber: string;
   orderItems: {
     product: {
       _id: Types.ObjectId | string;
@@ -445,26 +468,42 @@ export interface OrderItemResponse {
     };
     qty: number;
     price: number;
-  }
+  }[];
 }
 
-export async function FindOrderItem(
+export async function getOrder(
   userId: string,
   orderId: string
-): Promise<OrderItemResponse | null> {
+): Promise<OrderResponse | null> {
   await connect();
 
 
-  const user = await Users.findById(userId);
-  //To manage the user if doesn't exist.
-  if (user === null) {
-    return null;
-  }
+  const orderProjection = {
+    _id : true,    
+    date: true,
+    address: true,
+    cardHolder: true,
+    cardNumber: true,
+    orderItems: true,
+  };
 
 
+  // const user = await Users.findById(userId);
+
+  // if (!user) {
+  //   return null;
+  // }
+
+  // const order = user.orders.find(order => order._id.toString() === orderId);
+
+  // if (!order) {
+  //   return null;
+  // }
+
+  // The projection for the order to show everything we want 
+  
+  const orderItems = await Users.findOne({_id: userId}).populate('orderItems.order',orderProjection)
 
 
-
-
-  return user;
+  return orderItems;
 }

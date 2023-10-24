@@ -1,25 +1,33 @@
 import { Types } from 'mongoose';
 import { NextRequest, NextResponse } from 'next/server';
-import { FindOrderItem, OrderItemResponse } from '@/lib/handlers';
+import { OrderResponse, getUser, getOrder} from '@/lib/handlers';
 
-export async function GET (
+export async function GET(
   request: NextRequest,
   {
     params,
   }: {
-    params: { userId: string, orderId: string };
+    params: { userId:string ,orderId: string };
   }
-): Promise<NextResponse<OrderItemResponse | {} >> {
+): Promise<NextResponse<OrderResponse> | {}> {
 
-  if ((!Types.ObjectId.isValid(params.userId)) || (!Types.ObjectId.isValid(params.orderId))) {
+
+  //now we check if the user exists or not 
+  const user = await getUser(params.userId);
+  
+
+  if (user === null || !Types.ObjectId.isValid(params.orderId) ) {
+    return NextResponse.json({error: 'invalid userId'}, { status: 404 });
+  }
+  if (!Types.ObjectId.isValid(params.orderId)) {
     return NextResponse.json({}, { status: 400 });
   }
 
-  const orderItems = await FindOrderItem(params.userId, params.orderId);
-  if (orderItems === null) {
-    return NextResponse.json({}, { status: 404 });
+  const order = await getOrder(params.userId, params.orderId);
+
+  if (order === null) {
+    return NextResponse.json({error: 'User not found or order not found'}, { status: 404 });
   }
 
-  // 200: successssssssssssss
-  return NextResponse.json(orderItems);
+  return NextResponse.json(order);
 }
