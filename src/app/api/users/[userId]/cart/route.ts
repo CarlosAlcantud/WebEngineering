@@ -12,12 +12,14 @@ export async function GET(
 ): Promise<NextResponse<CartItemsResponse | {} >>{
   
   if (!Types.ObjectId.isValid(params.userId)) {
-    return NextResponse.json({}, { status: 400 });
+    return NextResponse.json({error: 'Invalid userID'}, { status: 400 });
   }
 
   const cartItems = await getCartItems(params.userId);
+
+
   if (cartItems === null) {
-    return NextResponse.json({}, { status: 404 });
+    return NextResponse.json({error: 'User not found'}, { status: 404 });
   }
 
   // TODO: Return 200  

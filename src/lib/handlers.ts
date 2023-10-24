@@ -11,6 +11,36 @@ import bcrypt from 'bcrypt';
 
 /////    /////////////////   FOR THE USER ////  //////   //////      ///////   
 
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       REST APPI endpoint for the GET USERS  ////// /////   ////
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+
+export interface UsersResponse {
+  users: User[];
+}
+
+export async function getUsers():  Promise<UsersResponse> {
+  await connect();
+
+  const userProjection = {
+    email: true,
+    name: true,
+    surname: true,
+    address: true,
+    birthdate: true,
+  };
+
+  const users = await Users.find({}, userProjection);
+  
+  return {
+    users: users,
+  };
+
+
+}
 
 /////  //////       //////   GET USER BY ID  ////// /////   ////   ////   //// 
 /////  //////       REST APPI endpoint for the GET of user by his ID   ////// /////   ////
@@ -36,6 +66,8 @@ export interface UserResponse {
       address: true,
       birthdate: true,
     };
+
+
     const user = await Users.findById(userId, userProjection);
   
     if (user === null) {
@@ -126,119 +158,15 @@ export async function getCartItems(userId: string): Promise<CartItemsResponse | 
   .findOne({ _id: userId }, userProjection)
   .populate('cartItems.product', productProjection)
 
+  if(!cartItems){
+    return null;
+  }
+
   return cartItems;
 }
 
 
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-/////  //////       ////// PUT  PRODUCT ID  ////// /////   ////   ////   //// 
-//  REST APPI endpoint for the PUT of the PRODUCT( Modify the cartItem to modify the cuantity of a product)   ////// /////   ////
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
-export interface UpdateCartResponse {
-  cartItems: Types.ObjectId[];
-  createdOrUpdated : boolean;
-}
-
-export async function UpdateCartItem(
-  userId: string,
-  productId: string,
-  qty: number
-): Promise<UpdateCartResponse | null> {
-  await connect();
-
-  
-  var createdOrUpdated = false;
-  const user = await Users.findById(userId);
-  
-  //To manage the user if doesn't exist.
-  if (user === null) {
-    return null;
-  }
-
-
-  const cartItem = user.cartItems.find((cartItem: any) =>
-    cartItem.product._id.equals(productId)
-  );
-
-
-  if (cartItem) {
-    cartItem.qty = qty;
-  } else {
-    createdOrUpdated = true;
-    const newCartItem = {
-      product: new Types.ObjectId(productId),
-      qty: qty,
-    };
-    user.cartItems.push(newCartItem);
-  }
-  await user.save();
-
-
-  
-
-  //With this I return to the method PUT in route.ts also the variable CreatedorUpdated.
-  const updateResponse: UpdateCartResponse = {
-    cartItems: user.cartItems.map((item: any) => item.product),
-    createdOrUpdated, // Include the CreatedorUpdated variable in the response.
-  };
-
-
-  
-  return updateResponse;
-
-
-  //return (updateUser);
-}
-
-
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-/////  //////       ////// DELETE PRODUCT ////// /////   ////   ////   //// 
-
-//  REST APPI endpoint for the DELETE of the PRODUCT   ////// /////   ////
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-
-export interface deleteProductResponse{
-  cartItems: {
-    product: {
-      _id: Types.ObjectId | string;
-      name: string;
-      price: number;
-    };
-    qty: number;
-  }[];
-}
-
-
-export async function deleteProduct(userId: string, productId: string): Promise<deleteProductResponse | null> {
-  await connect();
-
-    
-    const updatedCart = await Users.findByIdAndUpdate(
-      userId,
-      {
-        $pull: { cartItems: { product: productId } }, //WITH pull we extract the product from the cartItems 
-      }
-    );
-
-    if(updatedCart=== null){
-
-      return null;
-    }
-
-  
-
-  return updatedCart;
-    
-}
-
-
-
-  
 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
@@ -308,34 +236,112 @@ export async function getProducts():  Promise<ProductsResponse> {
 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-/////  //////       REST APPI endpoint for the GET USERS  ////// /////   ////
-////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       ////// PUT  PRODUCT ID  ////// /////   ////   ////   //// 
+//  REST APPI endpoint for the PUT of the PRODUCT( Modify the cartItem to modify the cuantity of a product)   ////// /////   ////
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
-export interface UsersResponse {
-  users: User[];
+export interface UpdateCartResponse {
+  cartItems: Types.ObjectId[];
+  createdOrUpdated : boolean;
 }
 
-export async function getUsers():  Promise<UsersResponse> {
+export async function UpdateCartItem(
+  userId: string,
+  productId: string,
+  qty: number
+): Promise<UpdateCartResponse | null> {
   await connect();
 
-  const userProjection = {
-    email: true,
-    name: true,
-    surname: true,
-    address: true,
-    birthdate: true,
-  };
-
-  const users = await Users.find({}, userProjection);
   
-  return {
-    users: users,
+  var createdOrUpdated = false;
+  const user = await Users.findById(userId);
+  const product = await getProduct(productId);
+
+  //To manage the user and the product if  they don't exist.
+  if (user === null || product === null) {
+    return null;
+  }
+
+
+  const cartItem = user.cartItems.find((cartItem: any) =>
+    cartItem.product._id.equals(productId)
+  );
+
+
+  if (cartItem) {
+    cartItem.qty = qty;
+  } else {
+    createdOrUpdated = true;
+    const newCartItem = {
+      product: new Types.ObjectId(productId),
+      qty: qty,
+    };
+    user.cartItems.push(newCartItem);
+  }
+  await user.save();
+
+
+  
+
+  //With this I return to the method PUT in route.ts also the variable CreatedorUpdated.
+  const updateResponse: UpdateCartResponse = {
+    cartItems: user.cartItems.map((item: any) => item.product),
+    createdOrUpdated, // Include the CreatedorUpdated variable in the response.
   };
 
+  return updateResponse;
 
+
+  //return (updateUser);
 }
+
+
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+/////  //////       ////// DELETE PRODUCT ////// /////   ////   ////   //// 
+
+//  REST APPI endpoint for the DELETE of the PRODUCT   ////// /////   ////
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
+
+export interface deleteProductResponse{
+  cartItems: {
+    product: {
+      _id: Types.ObjectId | string;
+      name: string;
+      price: number;
+    };
+    qty: number;
+  }[];
+}
+
+
+export async function deleteProduct(userId: string, productId: string): Promise<deleteProductResponse | null> {
+  await connect();
+
+    
+    const updatedCart = await Users.findByIdAndUpdate(
+      userId,
+      {
+        $pull: { cartItems: { product: productId } }, //WITH pull we extract the product from the cartItems 
+      }
+    );
+
+    if(updatedCart=== null){
+
+      return null;
+    }
+
+  
+
+  return updatedCart;
+    
+}
+
+
+
+  
 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
@@ -344,7 +350,7 @@ export async function getUsers():  Promise<UsersResponse> {
 
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
-/////  //////       REST APPI endpoint for the GET ORDERS ////// /////   ////
+/////  //////       REST APPI endpoint for the GET ORDERS with the userID ////// /////   ////
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
@@ -382,13 +388,19 @@ export async function getOrders(userId: string): Promise<OrdersResponse[] | null
     
   };
 
+  const user = await Users.findById(userId);
+  
 
+  //To manage the user and the product if  they don't exist.
+  if (user === null) {
+    return null;
+  }
 
   const orders = await Users.findById(userId,userProjection).populate(
     'orders',orderProjection
   );
 
-
+  
   return orders
 }
 
@@ -429,10 +441,17 @@ export async function createOrder(
 
   const newOrder = new Orders(doc);
 
-  newOrder.orderItems = user.cartItems.map((item: any) => ({
-    product: item.product._id,
-    qty: item.qty,
-    price: item.product.price
+
+  
+  newOrder.orderItems = await Promise.all(user.cartItems.map(async (item: any) => {
+    const product = await Products.findById(item.product._id.toString());
+    if (product) {
+      return {
+        product: item.product._id,
+        qty: item.qty,
+        price: product.price
+      };
+    }
   }));
 
   await newOrder.save();
@@ -458,54 +477,51 @@ export async function createOrder(
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
 export interface OrderResponse {
-  _id: Types.ObjectId;
-  address: string;
-  date: Date;
-  cardHolder: string;
-  cardNumber: string;
-  orderItems: {
-    product: {
-      _id: Types.ObjectId | string;
-      name: string;
-    };
-    qty: number;
-    price: number;
-  }[];
+  order: Order;
 }
 
-export async function getOrder(
-  userId: string,
-  orderId: string
-): Promise<OrderResponse | null> {
+export async function getOrder(userId: string, orderId: string) : Promise< OrderResponse | null>  {
   await connect();
 
-
   const orderProjection = {
-    _id : true,    
-    date: true,
+    _id: true,
     address: true,
+    date: true,
     cardHolder: true,
     cardNumber: true,
-    orderItems: true,
+    orderItems: {
+      product: true,
+      qty: true,
+      price: true,
+    },
   };
 
+  const productProjection = {
+    _id: true,
+    name: true,
+  };
 
-  // const user = await Users.findById(userId);
+  const user = await Users.findOne({ _id: userId });
+  if(!user){
+    return null;
+  }
 
-  // if (!user) {
-  //   return null;
-  // }
+  //const order = user.orders.includes(orderId);
 
-  // const order = user.orders.find(order => order._id.toString() === orderId);
-
-  // if (!order) {
-  //   return null;
-  // }
-
-  // The projection for the order to show everything we want 
-  
-  const orderItems = await Users.findOne({_id: userId}).populate('orderItems.order',orderProjection)
+  const order = user.orders.find((orderItem: any) =>
+    orderItem._id.equals(orderId)
+  );
 
 
-  return orderItems;
+  if (!order) {
+    return null;
+  }
+
+
+  const orderById = await Orders.findOne(
+    { _id: orderId },
+    orderProjection
+  ).populate('orderItems.product', productProjection);
+
+  return orderById;
 }

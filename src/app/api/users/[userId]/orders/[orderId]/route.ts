@@ -12,17 +12,10 @@ export async function GET(
 ): Promise<NextResponse<OrderResponse> | {}> {
 
 
-  //now we check if the user exists or not 
-  const user = await getUser(params.userId);
+  if ( !Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.orderId) ) {
+    return NextResponse.json({error: 'invalid userId or invalid orderID'}, { status: 400 });
+  }
   
-
-  if (user === null || !Types.ObjectId.isValid(params.orderId) ) {
-    return NextResponse.json({error: 'invalid userId'}, { status: 404 });
-  }
-  if (!Types.ObjectId.isValid(params.orderId)) {
-    return NextResponse.json({}, { status: 400 });
-  }
-
   const order = await getOrder(params.userId, params.orderId);
 
   if (order === null) {

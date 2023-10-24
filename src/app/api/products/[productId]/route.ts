@@ -10,14 +10,16 @@ export async function GET(
     params: { productId: string };
   }
 ): Promise<NextResponse<productResponse> | {}> {
+  
   if (!Types.ObjectId.isValid(params.productId)) {
-    return NextResponse.json({}, { status: 400 });
+    return NextResponse.json({error: 'invalid productId'}, { status: 400 });
   }
 
   const product = await getProduct(params.productId);
+  
 
   if (product === null) {
-    return NextResponse.json({}, { status: 404 });
+    return NextResponse.json({error: 'Product not found'}, { status: 404 });
   }
 
   return NextResponse.json(product);

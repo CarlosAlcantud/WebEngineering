@@ -8,13 +8,15 @@ export async function POST(
   const body = await request.json();
 
   if (!body.email || !body.password || !body.name || !body.surname || !body.address || !body.birthdate) {
-    return NextResponse.json({}, { status: 400 });
+    return NextResponse.json({
+      error: 'Invalid request. This can happen if the request body is invalid or incomplete, or if the e-mail address of the user is already in use.'}, 
+      { status: 400 });
   }
 
   const userId = await createUser(body);
 
   if (userId === null) {
-    return NextResponse.json({}, { status: 400 });
+    return NextResponse.json({error: 'Something happend on the function returning the users'}, { status: 404 });
   }
 
   const headers = new Headers();

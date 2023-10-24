@@ -23,18 +23,6 @@ export async function PUT(
     return NextResponse.json({error: 'Invalid user ID, invalid product ID or number of items not greater than 0.'}, { status: 400 });
  }
 
-  const user = await getUser(params.userId);
-
-  const product = await getProduct(params.productId);
-
-  if (!user ) {
-    return NextResponse.json({error: 'User not found'}, { status: 404 });
-  }
-
-  if (!product) {
-    return NextResponse.json({error: 'Product not found'}, { status: 404 });
-  }
-
 
   if (!body.qty) {
     return NextResponse.json({error: 'The qty is missing'}, { status: 400 });
@@ -48,7 +36,9 @@ export async function PUT(
   );
 
   //Now I get the cart updated to show it. 
-
+  if(!cartItems){
+    return NextResponse.json({error: 'User not found or product not found.'}, { status: 404 });
+  }
   const updatedCart = await getCartItems(params.userId);
 
   //I check if the product its created 
