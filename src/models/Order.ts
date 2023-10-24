@@ -6,6 +6,11 @@ export interface Order {
   date: Date;
   cardHolder?: string;
   cardNumber: string;
+  orderItems: {
+    product: Types.ObjectId;
+    qty: number;
+    price: number;
+  }[];
 }
 
 const OrderSchema = new Schema({
@@ -22,7 +27,27 @@ const OrderSchema = new Schema({
   cardNumber: {
     type: String,
     required: true
+  },
+  orderItems: [
+    
+    {
+    _id: false,
+    product:{ 
+      
+        type: Schema.Types.ObjectId,
+        ref: 'Product',
+    },
+    qty: {
+      type: Number,
+      min: 1,
+    },
+    price: {
+      type: String,
+      
+    },
   }
+  
+  ]
 });
 
 export default mongoose.models.Order || mongoose.model('Order', OrderSchema);
