@@ -3,6 +3,11 @@ import { NextRequest, NextResponse } from 'next/server';
 import { deleteProduct, deleteProductResponse ,getCartItems, getProduct, getUser,UpdateCartItem,UpdateCartResponse} from '@/lib/handlers';
 
 
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
+
+
 /// ////  ////////  ////  /////   /// //// ////  ////////  ////  ///// 
 ////  ////////  ////  /////   ////  ////////  ////  ///// 
 ////  ////////  ////  ///// ////  ////////  ////  ///// 
@@ -16,13 +21,24 @@ export async function PUT(
     params: { userId: string; productId: string };
   }
 ): Promise<NextResponse<UpdateCartResponse> | {}> {
+
   const body = await request.json();
 
-  if (body.qty < 0 || (!Types.ObjectId.isValid(params.userId)) || (!Types.ObjectId.isValid(params.productId))) {
+
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
+
+  if (body.qty <= 0 || (!Types.ObjectId.isValid(params.userId)) || (!Types.ObjectId.isValid(params.productId))) {
 
     return NextResponse.json({error: 'Invalid user ID, invalid product ID or number of items not greater than 0.'}, { status: 400 });
  }
 
+ if (session.user._id !== params.userId) {
+  return NextResponse.json({}, { status: 403 });
+}
 
   if (!body.qty) {
     return NextResponse.json({error: 'The qty is missing'}, { status: 400 });
@@ -67,9 +83,18 @@ export async function DELETE(
 ): Promise<NextResponse<deleteProductResponse> | {}> {
   
   //We check that both of the ids are valid 
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 });
+  }
+
 
   if (!Types.ObjectId.isValid(params.userId) || !Types.ObjectId.isValid(params.productId)) {
     return NextResponse.json({}, { status: 400 });
+  }
+
+  if (session.user._id !== params.userId) {
+    return NextResponse.json({}, { status: 403 });
   }
 
   //now we check if the user and the product exists or not 

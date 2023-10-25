@@ -1,12 +1,12 @@
 import Products, { Product } from '@/models/Product';
 import Users, { User } from '@/models/User';
-import Orders, { Order } from '@/models/Order';
 import dotenv from 'dotenv';
 import mongoose from 'mongoose';
+import bcrypt from 'bcrypt';
+
 
 dotenv.config({ path: `.env.local`, override: true });
 const MONGODB_URI = process.env.MONGODB_URI;
-
 
 const products: Product[] = [
   {
@@ -23,13 +23,6 @@ const products: Product[] = [
   },
 ];
 
-
-
-  
-
-
-
-
 async function seed() {
   if (!MONGODB_URI) {
     throw new Error(
@@ -42,32 +35,17 @@ async function seed() {
   };
   const conn = await mongoose.connect(MONGODB_URI, opts);
 
-  //Practica 1 
-  //  // ////  // // //  // //We create the empty collections if they don´t exist  //  // ////  // ////  // ////  // //
-//  // ////  // ////  // //   for the users and the products.                     //  // ////  // ////  // ////  // //
-
-
-  await Users.createCollection();
-  await Products.createCollection();
-
-
-
-  //Fin Practica 
-
-  //We clear the data base. 
-
   await conn.connection.db.dropDatabase();
-
-  //This inserts into the data base the products
-  const insertedProducts = await Products.insertMany(products);
+  //Lo mismo que lo anterior
+  // await Users.createCollection();
+  // await Products.createCollection();
   
-
+  const insertedProducts = await Products.insertMany(products);    //this returns that array of created documents
   //Now we start the Users creation. 
 
   const user: User = {
-
     email: 'Carlos.Alcantud@example.com',
-    password: '1234',
+    password: await bcrypt.hash('1234', 10),
     name: 'Carlos',
     surname: 'Alcantud',
     address: '150 Central Park S New York, 10019 United States',
@@ -78,13 +56,12 @@ async function seed() {
         qty: 2,
       },
     ],
-    
+    orders: []
   };
 
   const user2: User = {
-
     email: 'Simina.Ciui@example.com',
-    password: '1234',
+    password: await bcrypt.hash('0000', 10),
     name: 'Simina',
     surname: 'Ciui',
     address: '123 Main St, 12345 New York, United States',
@@ -95,7 +72,7 @@ async function seed() {
         qty: 1,
       },
     ],
-    
+    orders: []
   };
 
    //This line inserts the user.  

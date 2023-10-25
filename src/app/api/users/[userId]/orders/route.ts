@@ -2,6 +2,12 @@ import { NextRequest, NextResponse } from 'next/server';
 import { OrdersResponse, getOrders, getUser, CreateOrderResponse,createOrder} from '@/lib/handlers';
 import { Types } from 'mongoose';
 
+
+import { Session } from 'next-auth';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
+
+
 /////////////////////////          ORDERS  ///////////////////////////////////
 
 
@@ -18,9 +24,20 @@ export async function GET(
     params: { userId: string };
   }
 ): Promise<NextResponse<OrdersResponse | {} >>{
+
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 });
+  }  
+
+
   
   if (!Types.ObjectId.isValid(params.userId)) {
     return NextResponse.json({error: 'Invalid user ID '}, { status: 400 });
+  }
+
+  if (session.user._id !== params.userId) {
+    return NextResponse.json({}, { status: 403 });
   }
 
   const orders = await getOrders(params.userId);
@@ -47,12 +64,19 @@ export async function POST(
 ): Promise<NextResponse<CreateOrderResponse> | {}> {
   const body = await request.json();
 
+  const session: Session | null = await getServerSession(authOptions);
+  if (!session?.user) {
+    return NextResponse.json({}, { status: 401 });
+  }
 
   if (!body|| (!Types.ObjectId.isValid(params.userId)) ) {
 
     return NextResponse.json({error: 'Invalid user ID or invalid request. The latter can happen if the request body is invalid or incomplete, or the cart is empty.'}, { status: 400 });
  }
 
+ if (session.user._id !== params.userId) {
+  return NextResponse.json({}, { status: 403 });
+}
   const user = await getUser(params.userId);
 
 
