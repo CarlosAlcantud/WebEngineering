@@ -47,11 +47,11 @@ const UserSchema = new Schema({
       product: {
         type: Schema.Types.ObjectId,
         ref: 'Product',
-        required: true,
+        
       },
       qty: {
         type: Number,
-        required: true,
+        
         min: 1,
       },
     },

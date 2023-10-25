@@ -457,12 +457,17 @@ export async function createOrder(
   await newOrder.save();
 
   // Here we put the order just created to the user. 
+  
   user.orders.push(newOrder);
+  //We delete all the cartItems once we create the order with all the products in the cart 
+  user.cartItems = [];
   
   //Now we save the user 
   await user.save();
-
   
+  
+
+
   return {
     _id: newOrder._id,
   };
