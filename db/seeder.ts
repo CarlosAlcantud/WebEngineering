@@ -7,6 +7,7 @@ import mongoose from 'mongoose';
 dotenv.config({ path: `.env.local`, override: true });
 const MONGODB_URI = process.env.MONGODB_URI;
 
+
 const products: Product[] = [
   {
     name: 'Shelby Mustang 2020 ',
@@ -21,6 +22,8 @@ const products: Product[] = [
     description: '',
   },
 ];
+
+
 
   
 
@@ -63,17 +66,30 @@ async function seed() {
 
   const user: User = {
 
-    email: 'johnDoe@example.com',
+    email: 'Carlos.Alcantud@example.com',
     password: '1234',
-    name: 'John',
-    surname: 'Doe',
-    address: '123 Main St, 12345 New York, United States',
-    birthdate: new Date('1970-01-01'),
+    name: 'Carlos',
+    surname: 'Alcantud',
+    address: '150 Central Park S New York, 10019 United States',
+    birthdate: new Date('1998-08-10'),
     cartItems: [
       {
         product: insertedProducts[0]._id,
-        qty: 1,
+        qty: 2,
       },
+    ],
+    
+  };
+
+  const user2: User = {
+
+    email: 'Simina.Ciui@example.com',
+    password: '1234',
+    name: 'Simina',
+    surname: 'Ciui',
+    address: '123 Main St, 12345 New York, United States',
+    birthdate: new Date('1970-01-01'),
+    cartItems: [
       {
         product: insertedProducts[1]._id,
         qty: 1,
@@ -85,6 +101,7 @@ async function seed() {
    //This line inserts the user.  
 
   await Users.create(user);
+  await Users.create(user2);
 
 //   const res = await Users.create(user); If I want to show the user just created I need to put the const res, that way I can call res on the console.log 
 //console.log(JSON.stringify(res, null, 2)); //THIS LINE WHAT DOES IS TO SHOW THE USER THATS BEEN CREATED. 
@@ -119,13 +136,9 @@ const userProjection = { //THIS WAY WE GET FROM THE USER ONLY THE NAME AND THE S
   };
 
   const retrievedUser = await Users
-    .findOne({ email: 'johnDoe@example.com' }, userProjection)
+    .findOne({ email: 'Carlos.Alcantud@example.com' }, userProjection)
     .populate('cartItems.product', productProjection);
   console.log(JSON.stringify(retrievedUser, null, 2));
-
-
-
-
 
   await conn.disconnect();
 }
