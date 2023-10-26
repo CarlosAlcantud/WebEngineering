@@ -12,15 +12,15 @@ const products: Product[] = [
   {
     name: 'Shelby Mustang 2020 ',
     price: 120000,
-    img: '',
-    description: '',
+    img: 'https://cdn.topgear.es/sites/navi.axelspringer.es/public/media/image/2022/08/shelby-ford-mustang-code-red-2791485.jpg',
+    description: "By definition, the GT500 isn't an exotic car, but really, it is. How else could you describe a car that has a supercharged 5.2-liter V8 making 760 hp and 625 lb-ft of torque, all channeled through a seven-speed dual-clutch transmission and on to the rear wheels? A top speed of 180 mph. A 0-60-mph time of 3.3 seconds.",
   },
   {
     name: 'Porche 911',
     price: 300000,
-    img: '',
-    description: '',
-  },
+    img: 'https://img.remediosdigitales.com/812496/s22_3365_fine/1366_2000.jpeg',
+    description: "The Porsche 911 (pronounced Nine Eleven or in German: Neunelf) is a two-door 2+2 high performance rear-engined sports car introduced in September 1964 by Porsche AG of Stuttgart, Germany. It has a rear-mounted flat-six engine and originally a torsion bar suspension.",
+  },
 ];
 
 async function seed() {

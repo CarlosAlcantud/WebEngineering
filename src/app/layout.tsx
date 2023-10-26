@@ -9,14 +9,18 @@ export const metadata = {
   description: 'The car of your dreams in the palm of your hand. ',
 };
 
-export default function RootLayout({
+export default function RootLayout({ 
   children,
 }: {
   children: React.ReactNode;
 }) {
   return (
     <html lang='en'>
-      <body className={`${inter.className}`}>{children}</body>
+      <body 
+      
+      className={`${inter.className}`}>{children}
+      
+      </body>
     </html>
   );
 }
