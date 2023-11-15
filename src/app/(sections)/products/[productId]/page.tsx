@@ -22,6 +22,9 @@ export default async function Product({
       <h3 className='pb-4 text-3xl font-bold text-gray-900 sm:pb-6 lg:pb-8'>
         {product.name}
       </h3>
+      <img
+      src = {product.img}
+      />
       {product.description && <p>{product.description}</p>}
       {/* Here you should show the details of the product. */}
     </div>

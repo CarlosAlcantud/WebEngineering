@@ -21,6 +21,31 @@ const products: Product[] = [
     img: 'https://img.remediosdigitales.com/812496/s22_3365_fine/1366_2000.jpeg',
     description: "The Porsche 911 (pronounced Nine Eleven or in German: Neunelf) is a two-door 2+2 high performance rear-engined sports car introduced in September 1964 by Porsche AG of Stuttgart, Germany. It has a rear-mounted flat-six engine and originally a torsion bar suspension.",
   },
+  {
+  name: 'Ferrari sf90',
+  price: 1500000,
+  img: 'https://hips.hearstapps.com/hmg-prod/images/ferrari-sf90-stradale-by-novitec-2022-1-1657022038.jpg',
+  description: '',
+  },
+{
+  name: 'Maserati Alfieri',
+  price: 150000,
+  img: 'https://robbreport.mx/wp-content/uploads/2019/04/maserati-1024x768-1.jpg',
+  description: 'Without a doubt, an extraordinary sports car. It has a power of 3.0 liter twin-turbo V6 base tune and around 410 horsepower. The price ranges from $70,000 to $150,000.',
+  },
+{
+  name: 'Ferrari 458 Speciale',
+  price: 150000,
+  img: 'https://d1gl66oyi6i593.cloudfront.net/wp-content/uploads/2020/12/ferrari-458-speciale-blindado-2.jpg',
+  description: 'Without a doubt, an extraordinary sports car. It has a power of 3.0 liter twin-turbo V6 base tune and around 410 horsepower. The price ranges from $70,000 to $150,000.',
+  },
+{
+  name: 'McLaren 720s',
+  price: 720000,
+  img: 'https://64.media.tumblr.com/5c6d8b3822a18bee398a368d412e753c/2075793921f169ca-a8/s1280x1920/4f3775a768751e8d0b483da2cfaac941ff3212fd.jpg',
+  description: 'The McLaren 720S is bold and radical, with responses like a super predator. Accelerate from 0 to 96 km/h in an incredible 2.8 seconds if you provoke it. And it can travel 400 meters in 10.4 seconds from a static start.',
+  },
+
 ];
 
 async function seed() {
