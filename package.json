@@ -10,9 +10,10 @@
     "format": "prettier --check --ignore-path .gitignore ./src",
     "format:fix": "prettier --write --ignore-path .gitignore ./src",
     "seed": "tsx db/seeder.ts"
-
   },
   "dependencies": {
+    "@fortawesome/free-solid-svg-icons": "^6.4.2",
+    "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.15",
     "@heroicons/react": "^2.0.18",
     "@tailwindcss/aspect-ratio": "^0.4.2",
