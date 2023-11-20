@@ -357,9 +357,10 @@ export async function deleteProduct(userId: string, productId: string): Promise<
 
 
 export interface OrdersResponse {
+    _id: string;
     address: string;
     date: Date;
-    cardHolder?: string;
+    cardHolder: string;
     cardNumber: string;
     
 }
