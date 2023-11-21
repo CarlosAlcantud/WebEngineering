@@ -20,19 +20,7 @@ export default async function Product({
     notFound();
   }
 
-  const quantityRef = React.createRef<HTMLInputElement>();
-
-  const increment = () => {
-    if (quantityRef.current) {
-      quantityRef.current.value = (Number(quantityRef.current.value) + 1).toString();
-    }
-  };
   
-  const decrement = () => {
-    if (quantityRef.current && Number(quantityRef.current.value) > 0) {
-      quantityRef.current.value = (Number(quantityRef.current.value) - 1).toString();
-    }
-  };
 
   return (
     <div>

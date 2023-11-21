@@ -118,17 +118,17 @@ export default async function Profile() {
         <tbody className='divide-y'>
           {data?.orders.map((order) => (
             <tr key={order._id} className=' bg-white '>
-              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-2/5 '>{order._id}</td>
-              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-2/5 hidden sm:table-cell'>{order.address}</td>
-              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-1/10 hidden sm:table-cell md:hidden lg:table-cell'>
+              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-30/100 '>{order._id}</td>
+              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-40/100 hidden sm:table-cell'>{order.address}</td>
+              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell md:hidden lg:table-cell'>
                 <div className='flex flex-col '>
                   <span>{order.cardHolder}</span>
                   <span className='text-sm text-gray-500'>{order.cardNumber}</span>
                   
                 </div>
               </td>
-              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-1/10 text-right'>
-              <Link href={`/orders/${order!._id}/`}>view details</Link>
+              <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 text-center'>
+              <Link href={`/orders/${order!._id}/`} className = 'text-blue-500 text-justify-center'>view details</Link>
               </td>
             </tr>
           ))}
