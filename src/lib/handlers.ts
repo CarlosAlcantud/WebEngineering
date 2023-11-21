@@ -357,12 +357,13 @@ export async function deleteProduct(userId: string, productId: string): Promise<
 
 
 export interface OrdersResponse {
+  orders: {
     _id: string;
     address: string;
     date: Date;
     cardHolder: string;
     cardNumber: string;
-    
+  }[];
 }
 
 export async function getOrders(userId: string): Promise<OrdersResponse[] | null> {

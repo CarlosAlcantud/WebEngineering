@@ -14,6 +14,7 @@ export default async function Index() {
           <ProductTile key={product._id!.toString()} product={product}  />
         ))}
       </div>
+      
     </div>
   );
 }

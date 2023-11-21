@@ -6,7 +6,7 @@ export default function Header() {
         <h1 className='text-6xl font-bold text-green-100 sm:text-7xl lg:text-8xl'>
           Prestige Motors 
         </h1>
-        <p className='mt-4 text-sm leading-8 text-green-50 sm:mt-6 sm:text-base lg:text-lg'>
+        <p className='mt-4 text-sm font-bold leading-8 text-green-50 sm:mt-6 sm:text-base lg:text-lg'>
           Buy your dream car from the palm of your hand 
         </p>
       </div>
