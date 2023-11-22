@@ -5,7 +5,7 @@ import { Session } from 'next-auth';
 import { Types } from 'mongoose';
 import { getOrder } from '@/lib/handlers';
 import React from 'react';
-
+import Link from 'next/link';
 
 export const dynamic = 'force-dynamic';
 
@@ -132,7 +132,11 @@ export default async function Order({
         <tbody className='divide-y'>
           {order.orderItems.map((orderItem) => (
             <tr key={orderItem.product._id} className=' bg-white '>
-              <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'>{orderItem.product.name}</td>
+              <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'>
+                <Link href={`/products/${orderItem.product._id}`}>
+                    {orderItem.product.name}
+                </Link>
+               </td>
               <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell text-center'>{orderItem.qty}</td>
               <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 hidden sm:table-cell md:hidden lg:table-cell text-center'>
                 {
