@@ -50,7 +50,7 @@ export default function CartItemsList() {
                       {cartItem.product.name}
                     </Link>
                   </td>
-                  <td className='flex items-center space-x-2'>
+                  <td className='flex items space-x-2'>
                             <CartItemCounter
                               productId={cartItem.product._id}
                               // productId={item.product && item.product._id ? item.product._id.toString() : ''}

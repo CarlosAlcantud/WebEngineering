@@ -8,12 +8,13 @@ import { authOptions } from '@/lib/authOptions';
 import { getServerSession } from 'next-auth/next';
 import Link from 'next/link';
 import { Session } from 'next-auth';
+import NavbarCartButton from '@/components/NavbarCartButton';
 
 export default async function Navbar() {
   const session: Session | null = await getServerSession(authOptions);
 
   return (
-    <nav className='fixed top-0 z-50 w-full bg-gray-800 bg-opacity-90 backdrop-blur-lg backdrop-filter'>
+    <nav className='fixed top-0 z-50 w-full bg-opacity-90 backdrop-blur-lg backdrop-filter sm:bg-transparent sm:bg-opacity-0 sm:backdrop-blur-none sm:backdrop-filter-none'>
       <div className='mx-auto max-w-7xl px-6 sm:px-8 lg:px-10'>
         <div className='relative flex h-16 items-center justify-between'>
           <div className='flex flex-1 items-stretch justify-start'>
@@ -34,10 +35,10 @@ export default async function Navbar() {
           <div className='absolute inset-y-0 right-0 flex items-center space-x-4'>
             {session ? (
               <>
-                <NavbarButton href='/cart'>
+                <NavbarCartButton>
                   <span className='sr-only'>Cart</span>
                   <ShoppingCartIcon className='h-6 w-6' aria-hidden='true' />
-                </NavbarButton>
+                </NavbarCartButton>
                 <NavbarButton href='/profile'>
                   <span className='sr-only'>User profile</span>
                   <UserIcon className='h-6 w-6' aria-hidden='true' />
