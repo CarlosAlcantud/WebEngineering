@@ -15,6 +15,8 @@ export default function CartItemsList() {
     (total, item) => total + item.qty * item.product.price,
     0
   );
+
+  
   return (
     <>
       <div className='items-left flex flex-col'>
