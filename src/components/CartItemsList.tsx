@@ -30,48 +30,60 @@ export default function CartItemsList() {
         </div>
       ) : (
         <>
-          <table className='mb-4 w-full rounded'>
-            <thead>
-              <tr className='rounded bg-gray-200'>
-                <th className='rounded py-2 text-left'> PRODUCT NAME </th>
-                <th className='rounded py-2 text-left'> QUANTITY </th>
-                <th className='rounded py-2 text-left'> PRICE </th>
-                <th className='rounded py-2 text-left'> TOTAL </th>
+          <table className='table-fixed w-full mt-4 border'>
+            <thead className='text-left bg-gray-100 mb-4'>
+              <tr className='divide-y'>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold '>PRODUCT NAME </th>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10w-20/100 font-semibold hidden sm:table-cell text-center'>QUANTITY</th>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold hidden sm:table-cell md:hidden lg:table-cell text-center'>PRICE</th>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-50w-20/100 font-semibold text-center'> TOTAL</th>
+                
               </tr>
             </thead>
-            <tbody>
+            <tbody className='divide-y'>
               {cartItems.map((cartItem) => (
                 <tr
                   key={cartItem.product._id.toString()}
-                  className='rounded bg-white'
+                  className=' bg-white'
                 >
-                  <td className='lg:w-3/5'>
+                  <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'>
                     <Link href={`/products/${cartItem.product._id}`}>
                       {cartItem.product.name}
                     </Link>
                   </td>
-                  <td className='flex items space-x-2'>
+                  <td className='flex justify-center space-x-2'>
                             <CartItemCounter
                               productId={cartItem.product._id}
                               // productId={item.product && item.product._id ? item.product._id.toString() : ''}
 
                             />
                   </td>
-                  <td>{cartItem.product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}</td>
-                  <td>
-                    {(cartItem.qty * cartItem.product.price).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
+                  <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 hidden sm:table-cell md:hidden lg:table-cell text-center'>
+                    {
+                    cartItem.product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+                    }
+                  </td>
+                  <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-50/100 text-center '>
+                    {
+                    (cartItem.qty * cartItem.product.price).toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+                    }
                   </td>
                 </tr>
               ))}
+              <tr className='bg-white'>
+                <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'><strong>Total </strong></td>
+                <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell'> </td>
+                <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell'> </td>
+                <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-1/4 text-center'>
+                  <strong>{
+                    totalPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
+                  }</strong>
+                </td>
+              </tr>
             </tbody>
           </table>
-          <div className='mb-4 w-full rounded bg-gray-200 p-4'>
-            <span className='text-lg font-bold'>Total:</span>
-            <span className='ml-2 text-lg'>
-              {totalPrice.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
-            </span>
-          </div>
-          <div className='text-center'>
+
+          <div className='text-center mt-2'>
             <Link href='/checkout'>
               <button className='rounded bg-gray-800 px-4 py-2 text-white'>
                 Checkout

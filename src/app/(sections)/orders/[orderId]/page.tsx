@@ -126,7 +126,7 @@ export default async function Order({
             <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10w-20/100 font-semibold hidden sm:table-cell text-center'>QUANTITY</th>
             <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold hidden sm:table-cell md:hidden lg:table-cell text-center'>PRICE</th>
             <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-50w-20/100 font-semibold text-center'> TOTAL</th>
-            {/* Add more headers as needed */}
+            
           </tr>
         </thead>
         <tbody className='divide-y'>

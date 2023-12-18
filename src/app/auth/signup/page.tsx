@@ -1,4 +1,4 @@
-import SignInForm from '@/components/SignInForm';
+import SignUpForm from '@/components/SignUpForm';
 import Link from 'next/link';
 
 export default function SignIn() {
@@ -17,22 +17,14 @@ export default function SignIn() {
             alt='GameShop logo'
           />
           <h2 className='mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900'>
-            Sign in to your account
+            Create your account
           </h2>
 
           <div className='mx-auto mt-10 w-full max-w-sm '>
-          <SignInForm />
+          <SignUpForm />
 
-          <p className='mt-10 text-center text-sm text-gray-500'>
-            Not a member?{' '}
-            <Link
-              href='/auth/signup'
-              className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
-            >
-              Register now!
-            </Link>
-          </p>
-        </div>
+          
+          </div>
         </div>
       </div>
 
