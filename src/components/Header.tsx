@@ -7,7 +7,7 @@ export default function Header() {
           Prestige Motors 
         </h1>
         <p className='mt-4 text-sm font-bold leading-8 text-green-50 sm:mt-6 sm:text-base lg:text-lg'>
-          Buy your dream car from the palm of your hand 
+        the e-shop for car lovers. Buy your dream car now! 
         </p>
       </div>
     </header>

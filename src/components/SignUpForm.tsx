@@ -1,8 +1,10 @@
 'use client';
 
-import { signIn } from 'next-auth/react';
+
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation';
+import { toast } from 'react-toastify';
+
 
 interface FormValues {
   name: string;
@@ -45,9 +47,10 @@ export default function SignUpForm() {
           }
     );
     if (res.ok) {
-      setError('Your Account has been created. Please log in.');
-      router.push('/');
+      setError('');
+      router.push('/?registered=true');
       router.refresh();
+      toast.success('Your Account has been created. Please log in.');
     } else {
       if (!res.ok) {
         setError(

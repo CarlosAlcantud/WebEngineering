@@ -4,11 +4,12 @@ import React from 'react';
 import { NextAuthProvider } from '@/providers/NextAuthProvider';
 import { CartItemsProvider } from '@/providers/CartItemsProvider';
 
+
 const inter = Inter({ subsets: ['latin'] });
 
 export const metadata = {
-  title: 'GameShop',
-  description: 'GameShop sample application for the WES course',
+  title: 'Prestige Motors',
+  description: 'Prestige Motors, the e-shop for car lovers. Buy your dream car now!',
 };
 
 export default function RootLayout({
@@ -19,6 +20,7 @@ export default function RootLayout({
   return (
     <html lang='en'>
       <body className={`${inter.className}`}>
+        
         <NextAuthProvider>
           <CartItemsProvider>
             {children}
