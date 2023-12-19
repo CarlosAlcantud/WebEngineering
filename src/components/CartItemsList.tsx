@@ -1,22 +1,41 @@
 'use client';
 
-import { useContext } from 'react';
+import { useContext, useEffect} from 'react';
 import CartItemCounter from '@/components/CartItemCounter';
 import { CartItemsContext } from '@/providers/CartItemsProvider';
 import Link from 'next/link';
-
+import { useSession } from "next-auth/react";
 export const dynamic = 'force-dynamic';
 
 export default function CartItemsList() {
+  
+  const { data: session } = useSession({ required: true });
   const { cartItems, updateCartItems } = useContext(CartItemsContext);
 
-  //   Calcula el precio total del pedido
+  useEffect(() => {
+    if (session) {
+      const fetchData = async function () {
+        const res = await fetch(`/api/users/${session.user._id}/cart`,
+        {
+          method: "GET"
+        });
+        const body = await res.json();
+        updateCartItems(body.cartItems);
+      };
+
+      fetchData().catch(console.error);
+    } else {
+      updateCartItems([]);
+    }
+  }, [session,updateCartItems]);
+
+  // Calculate total price
   const totalPrice = cartItems.reduce(
     (total, item) => total + item.qty * item.product.price,
     0
   );
 
-  
+
   return (
     <>
       <div className='items-left flex flex-col'>
@@ -32,12 +51,14 @@ export default function CartItemsList() {
         </div>
       ) : (
         <>
-          <table className='table-fixed w-full mt-4 border'>
-            <thead className='text-left bg-gray-100 mb-4'>
+
+          <div className = "overflow-auto rounded-xl shadow-2xl">
+          <table className='w-full '>
+            <thead className='text-left bg-gray-100 border-b-2 border-gray-200 mb-4 divide-y'>
               <tr className='divide-y'>
                 <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold '>PRODUCT NAME </th>
-                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10w-20/100 font-semibold hidden sm:table-cell text-center'>QUANTITY</th>
-                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold hidden sm:table-cell md:hidden lg:table-cell text-center'>PRICE</th>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10w-20/100 font-semibold text-center'>QUANTITY</th>
+                <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20w-20/100 font-semibold hidden sm:table-cell lg:table-cell text-center'>PRICE</th>
                 <th className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-50w-20/100 font-semibold text-center'> TOTAL</th>
                 
               </tr>
@@ -60,7 +81,7 @@ export default function CartItemsList() {
 
                             />
                   </td>
-                  <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 hidden sm:table-cell md:hidden lg:table-cell text-center'>
+                  <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 hidden sm:table-cell lg:table-cell text-center'>
                     {
                     cartItem.product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })
                     }
@@ -74,7 +95,7 @@ export default function CartItemsList() {
               ))}
               <tr className='bg-white'>
                 <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'><strong>Total </strong></td>
-                <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell'> </td>
+                <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 '> </td>
                 <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell'> </td>
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-1/4 text-center'>
                   <strong>{
@@ -84,8 +105,9 @@ export default function CartItemsList() {
               </tr>
             </tbody>
           </table>
+          </div>
 
-          <div className='text-center mt-2'>
+          <div className='text-center mt-4'>
             <Link href='/checkout'>
               <button className='rounded bg-gray-800 px-4 py-2 text-white'>
                 Checkout
