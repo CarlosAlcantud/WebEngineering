@@ -22,7 +22,15 @@ export default function SignIn() {
 
           <div className='mx-auto mt-10 w-full max-w-sm '>
           <SignUpForm />
-
+            <p className='mt-10 text-center text-sm text-gray-500'>
+              Already a member?{' '}
+              <Link
+                href='/auth/signin'
+                className='font-semibold leading-6 text-indigo-600 hover:text-indigo-500'
+              >
+                Log in Now!
+              </Link>
+            </p>
           
           </div>
         </div>
