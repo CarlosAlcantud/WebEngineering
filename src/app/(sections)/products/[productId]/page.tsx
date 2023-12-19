@@ -36,14 +36,14 @@ export default async function Product({
            <img src={product.img} className='h-full w-full object-cover object-center group-hover:opacity-75'/>
           </div>
 
-          {/* Apartado para el precio y los botones */}
+          
           <div>
-            {/* Apartado para el precio */}
+           
             <div className='text-5xl text-gray-700 mt-6'>
               {product.price.toLocaleString('es-ES', { style: 'currency', currency: 'EUR' })}
             </div>
 
-            {/* Apartado para los botones  */}
+           
             <div className='flex items-center justify-center mt-4'>
 
                 
