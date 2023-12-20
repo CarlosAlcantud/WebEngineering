@@ -28,11 +28,15 @@ export default async function Order({
 
   const order = await getOrder(session.user._id,params.orderId);
 
-  let total = order.orderItems.map((orderItem) => orderItem.price * orderItem.qty).reduce((a, b) => a + b, 0);
-
   if (order === null) {
     notFound();
+    return;
   }
+
+  let total = order.orderItems.map((orderItem) => orderItem.product.price * orderItem.qty).reduce((a, b) => a + b, 0);
+
+
+ 
   return (
     
      <div className='flex flex-col '  >
@@ -48,7 +52,7 @@ export default async function Order({
             </svg>
           </strong>
           <div className="text-sm sm:text-base md:text-lg lg:text-xl" style={{ whiteSpace: 'nowrap' }}>
-            <strong>Order ID:</strong> {order._id}
+            <strong>Order ID:</strong> {order._id.toString()}
           </div>
         </div>
 
@@ -118,7 +122,7 @@ export default async function Order({
           </thead>
           <tbody className='divide-y'>
             {order.orderItems.map((orderItem) => (
-              <tr key={orderItem.product._id} className=' bg-white '>
+              <tr key={orderItem.product._id.toString()} className=' bg-white '>
                 <td className='p-4 text-x sm:text-sm md:text-base lg:text-lg w-20/100'>
                   <Link href={`/products/${orderItem.product._id}`}>
                       {orderItem.product.name}
@@ -127,12 +131,12 @@ export default async function Order({
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 text-center'>{orderItem.qty}</td>
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-20/100 text-center hidden sm:table-cell'>
                   {
-                    parseFloat(orderItem.price).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+                    orderItem.product.price.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
                   }
                 </td>
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-50/100 text-center '>
                 {
-                    parseFloat(orderItem.price * orderItem.qty).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+                    (orderItem.product.price * orderItem.qty).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
                     
                 }
                 </td>
@@ -144,7 +148,7 @@ export default async function Order({
             <td className = 'p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:table-cell '> </td>
             <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-1/4 text-center'>
               <strong>{
-                parseFloat(total).toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
+                  total.toLocaleString('de-DE', { style: 'currency', currency: 'EUR' })
               }</strong>
             </td>
             </tr>
