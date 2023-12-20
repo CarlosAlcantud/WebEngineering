@@ -3,12 +3,17 @@ import { notFound } from 'next/navigation';
 import { getProduct } from '@/lib/handlers';
 import React from 'react';
 import CartItemCounter from '@/components/CartItemCounter';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/lib/authOptions';
+import { Session } from 'next-auth';
+import ProductWrapped from '@/components/ProductWrapped';
+
 export default async function Product({
   params,
 }: {
   params: { productId: string };
 }) {
-
+  const session: Session | null = await getServerSession(authOptions);
   
   if (!Types.ObjectId.isValid(params.productId)) {
     notFound();
@@ -46,9 +51,11 @@ export default async function Product({
            
             <div className='flex items-center justify-center mt-4'>
 
-                
-              <CartItemCounter productId={params.productId} />
-
+            {session ? (
+              <ProductWrapped productId={params.productId} />
+             ) : (
+              <p></p>
+             )}      
               
         
             </div>

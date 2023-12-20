@@ -17,9 +17,10 @@ export default function NavbarButton({ children }: NavbarButtonProps) {
  
 
   async function handleSignOut() {
-          await signOut({redirect: false});
-          router.push('/');
-          router.refresh();
+          await signOut({callbackUrl : '/'});
+          // router.push('/');
+          // router.refresh();
+
           toast.success('You have successfully been signed out.');
           
   }
