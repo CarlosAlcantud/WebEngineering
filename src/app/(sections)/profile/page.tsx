@@ -116,8 +116,8 @@ export default async function Profile() {
           </thead>
           <tbody className='divide-y'>
             {data?.orders.map((order) => (
-              <tr key={order._id} className=' bg-white '>
-                <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-30/100 '>{order._id}</td>
+              <tr key={order._id.toString()} className=' bg-white '>
+                <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-30/100 '>{order._id.toString()}</td>
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-40/100 hidden sm:table-cell'>{order.address}</td>
                 <td className='p-4 text-xs sm:text-sm md:text-base lg:text-lg w-10/100 hidden sm:hidden md:hidden lg:table-cell'>
                   <div className='flex flex-col '>

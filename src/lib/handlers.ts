@@ -358,7 +358,7 @@ export async function deleteProduct(userId: string, productId: string): Promise<
 
 export interface OrdersResponse {
   orders: {
-    _id: string;
+    _id: Types.ObjectId | string;
     address: string;
     date: Date;
     cardHolder: string;
@@ -366,7 +366,7 @@ export interface OrdersResponse {
   }[];
 }
 
-export async function getOrders(userId: string): Promise<OrdersResponse[] | null> {
+export async function getOrders(userId: string): Promise<OrdersResponse | null> {
   await connect();
   
   
@@ -438,7 +438,7 @@ export async function createOrder(
   const doc : Order = {
     ...order,
     date: new Date(),
-    
+    orderItems: [],
   };
 
   const newOrder = new Orders(doc);
@@ -484,7 +484,19 @@ export async function createOrder(
 ////  //////  ///// //////     /////    ////  ///// /////   ///// ////  //////  ///// //////     //
 
 export interface OrderResponse {
-  order: Order;
+    _id: Types.ObjectId | string;
+    address: string,
+    date: Date,
+    cardHolder: string,
+    cardNumber: string,
+    orderItems: {
+      product: {
+        _id: Types.ObjectId | string;
+        name: string;
+        price: number;
+      };
+      qty: number;
+    }[];
 }
 
 export async function getOrder(userId: string, orderId: string) : Promise< OrderResponse | null>  {
